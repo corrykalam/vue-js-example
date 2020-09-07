@@ -84,7 +84,9 @@
                 <!-- <div v-for="item in listProduct" :key="item.id"> -->
                 <div class="menu" :value="item.id" v-for="item in listProduct" :key="item.id">
                   <img @click="updateCart(item.id)" :src="item.image" v-bind:alt="item.name" />
-                  <h3 class="font-menu">{{item.name}}</h3>
+                  <router-link :to="{path: 'edit', query: {id: item.id}}">
+                    <h3 class="font-menu">{{item.name}}</h3>
+                  </router-link>
                   <p>{{new Intl.NumberFormat('id-ID', { maximumSignificantDigits: 3 }).format(item.price)}}</p>
                 </div>
                 <!-- </div> -->
@@ -176,7 +178,7 @@ export default {
   methods: {
     getProduct() {
       axios
-        .get("http://localhost:4321/product")
+        .get(process.env.VUE_APP_BASE_URL + "/product")
         .then((res) => {
           this.listProduct = res.data;
         })
@@ -188,19 +190,18 @@ export default {
     filterProduct(category) {
       let url;
       if (category == "alphabetical") {
-        url =
-          "http://localhost:4321/product/filter?type=alphabetical&order=asc";
+        url = "/product/filter?type=alphabetical&order=asc";
       } else if (category == "price") {
-        url = "http://localhost:4321/product/filter?type=price&order=asc";
+        url = "/product/filter?type=price&order=asc";
       } else if (category == "food") {
-        url = "http://localhost:4321/product/filter?type=category&order=food";
+        url = "/product/filter?type=category&order=food";
       } else if (category == "drink") {
-        url = "http://localhost:4321/product/filter?type=category&order=drink";
+        url = "/product/filter?type=category&order=drink";
       } else if (category == "latest") {
-        url = "http://localhost:4321/product/filter?type=latest";
+        url = "/product/filter?type=latest";
       }
       axios
-        .get(url)
+        .get(process.env.VUE_APP_BASE_URL + url)
         .then((res) => {
           console.log("from filter ");
           console.log(res);
@@ -214,7 +215,7 @@ export default {
     searchProduct() {
       axios
         .get(
-          `http://localhost:4321/product/search?name=${this.search}&sensitive=true`
+          `${process.env.VUE_APP_BASE_URL}/product/search?name=${this.search}&sensitive=true`
         )
         .then((res) => {
           console.log("from search ");
